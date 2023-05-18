@@ -1,17 +1,16 @@
 import fastify from 'fastify' 
-import { PrismaClient } from '@prisma/client'
+import cors from '@fastify/cors'
+import { memoriesRoutes } from './routes/memories.routes'
+import { usersRoutes } from './routes/users.routes'
 
 const app = fastify()
 const PORT = { port: 5000 }
-const prisma = new PrismaClient()
 
-const get_all_users = async () => {
-  const users = await prisma.user.findMany()
-  return users
-}
-
-app.get('/users', get_all_users)
-
+app.register(cors, {
+  origin: true
+})
+app.register(memoriesRoutes)
+app.register(usersRoutes)
 
 app.listen(PORT).then(() => {
   console.log('Server listening on port ' + PORT.port)
